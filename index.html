@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Buku Tamu</title>
+
+	<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="popper.min.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+	<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<section>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">Tambah Tamu</h4>
+						<form class="form-row" id="formGuest" action="#">
+							<div class="col-md-6">
+								<label>Nama</label>
+								<input type="text" class="form-control" name="name" id="name">
+							</div>
+							<div class="col-md-6">
+								<label>No. Telp</label>
+								<input type="text" class="form-control" name="phone" id="phone">
+							</div>
+							<div class="col-md-12">
+								<label>Email</label>
+								<input type="email" class="form-control" name="email" id="email">
+							</div>
+							<div class="col-md-12">
+								<label>Alamat</label>
+								<textarea class="form-control" name="address" id="address"></textarea>
+							</div>
+							<div class="col-md-12">
+								<button type="button" class="btn btn-primary" id="btnSubmit">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-md-6">
+				
+				<div class="card">
+					<div class="card-body">
+						<h4 class="card-title">Daftar Tamu</h4>
+						<table class="table table-bordered">
+							<thead>
+								<th>No</th>
+								<th>Nama</th>
+								<th>No. Telp</th>
+								<th>Email</th>
+								<th>Alamat</th>
+							</thead>
+							<tbody id="guestList">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		showGuest();
+
+		$('#btnSubmit').click(function(){
+
+			var name 	= $('#name').val();
+			var email 	= $('#email').val();
+			var phone 	= $('#phone').val();
+			var address = $('#address').val();
+
+			submitGuest(name, phone, email, address);
+
+		});
+
+
+	});
+
+	function submitGuest(name2, phone2, email, address){
+
+		$.ajax({
+			url: 'http://localhost/tekweb/modul5/api.php?act=save',
+			method: 'POST',
+			data: {
+				'name': name2,
+				'phone': phone2,
+				'email': email,
+				'address': address
+			},
+			type: 'JSON',
+			success: function(result){
+
+				console.log('status:' + result);
+				
+				showGuest();
+				alert('Tamu berhasil di daftarkan');
+
+			}
+
+		});
+
+		return false;
+
+	}
+
+	function showGuest(){
+
+		$.ajax({
+			url: 'http://localhost/tekweb/modul5/api.php?act=list',
+			method: 'GET',
+			type: 'HTML',
+			success: function(result){
+
+				$('#guestList').html(result);
+
+			}
+			
+		});
+
+	}
+</script>
+
+</body>
+</html>
